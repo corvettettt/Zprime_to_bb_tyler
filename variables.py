@@ -61,14 +61,14 @@ variable = {
         'log' : False,
     },
     'jdeepFlavour_1': {
-        'title' : "jet 1 deepFlavour",
+        'title' : "jet 1 DeepJet",
         'nbins' : 50,
         'min' : 0.,
         'max' : 1.,
         'log' : True,
     },
     'jdeepFlavour_2': {
-        'title' : "jet 2 deepFlavour",
+        'title' : "jet 2 DeepJet",
         'nbins' : 50,
         'min' : 0.,
         'max' : 1.,

@@ -28,8 +28,12 @@ parser = ArgumentParser()
 parser.add_argument('-mp', '--multiprocessing',  dest='multiprocessing',   action='store_true', default=False)
 args = parser.parse_args()
 
-mass_points = [1800, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 7000, 8000]
-years = ['2016', '2017', '2018']
+#mass_points = [1800, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 7000, 8000]
+#years = ['2016', '2017', '2018']
+
+mass_points = [500, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000,9000]
+#years = ['2017', '2018']
+years = ['2016']
 
 if args.multiprocessing:
     print "Multiprocessing enabled"
@@ -43,7 +47,8 @@ if not os.path.exists(outdir):
 jobs = []
 
 samples = []
-data_type="MC_signal"
+#data_type="MC_signal"
+data_type="MC_bstar"
 for year in years:
     for masspoint in mass_points:
         sample_name = data_type+"_"+year

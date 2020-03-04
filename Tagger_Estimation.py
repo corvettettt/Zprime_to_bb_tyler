@@ -32,8 +32,9 @@ parser.add_option("-v", "--variable", action="store", type="string", dest="varia
 parser.add_option("-c", "--cut", action="store", type="string", dest="cut", default="")
 parser.add_option("-y", "--year", action="store", type="string", dest="year", default="run2")
 parser.add_option("-b", "--btagging", action="store", type="string", dest="btagging", default="medium")
+parser.add_option("-s", "--save", action="store_true", default=False, dest="save")
 parser.add_option("-n", "--norm", action="store_true", default=False, dest="norm")
-parser.add_option("-B", "--blind", action="store_true", default=False, dest="blind")
+parser.add_option("-B", "--blind", action="store_true", default=True, dest="blind")
 parser.add_option("-f", "--final", action="store_true", default=False, dest="final")
 (options, args) = parser.parse_args()
 
@@ -55,9 +56,13 @@ color = {'none': 920, 'qq': 1, 'bq': 632, 'bb': 600, 'mumu': 418}
 color_shift = {'none': 2, 'qq': 922, 'bq': 2, 'bb': 2, 'mumu':2}
 
 ########## SAMPLES ##########
-data = ["data_obs"]
+#data = ["data_obs"]
+data = []
 back = ["TTbar", "QCD"]
-sign = ['ZpBB_M2000', 'ZpBB_M4000', 'ZpBB_M6000']#, 'ZpBB_M8000']
+if options.save:
+    sign = ['ZpBB_M1600', 'ZpBB_M1800', 'ZpBB_M2000', 'ZpBB_M2500', 'ZpBB_M3000', 'ZpBB_M3500', 'ZpBB_M4000', 'ZpBB_M4500', 'ZpBB_M5000', 'ZpBB_M5500', 'ZpBB_M6000','ZpBB_M7000', 'ZpBB_M8000']
+else:
+    sign = ['ZpBB_M2000', 'ZpBB_M4000', 'ZpBB_M6000']
 ########## ######## ##########
 
 if BTAGGING not in ['tight', 'medium', 'loose', 'semimedium']:
@@ -67,13 +72,65 @@ if BTAGGING not in ['tight', 'medium', 'loose', 'semimedium']:
 jobs = []
 
 def MANtag_eff(pt):
-    return 0.1 ##FIXME
+    bins = [0, 500, 750, 1000, 1250, 1500, 1750, 2000, 2500]
+    if BTAGGING=="medium":
+        vals = [0.152736, 0.105698, 0.117064, 0.0904397, 0.0824952, 0.0715723, 0.0754462, 0.0843898]
+    elif BTAGGING=="loose":
+        vals = [0.450585, 0.407161, 0.352806, 0.321539, 0.304188, 0.295961, 0.308634, 0.285568]
+    else:
+        print "only medium and loose WP implemented so far"
+        val = None
+    for i in range(len(bins)-1):
+        if pt >= bins[i] and pt < bins[i+1]: return vals[i]
+    if pt>=bins[-1]: return (vals[-1]+vals[-2])*0.5
+    else: print "no bin associated with pt =",pt
 
 def MANtag_mis(pt):
-    return 0.01 ##FIXME
+    bins = [0, 500, 750, 1000, 1250, 1500, 1750, 2000, 2500]
+    if BTAGGING=="medium":
+        vals = [0.0106065, 0.00855587, 0.0110678, 0.0102963, 0.00975135, 0.0109446, 0.00979731, 0.0115462]
+    elif BTAGGING=="loose":
+        vals = [0.096767, 0.105604, 0.0986583, 0.0967201, 0.091742, 0.105068, 0.109168, 0.0969646]
+    else:
+        print "only medium and loose WP implemented so far"
+        val = None
+    for i in range(len(bins)-1):
+        if pt >= bins[i] and pt < bins[i+1]: return vals[i]
+    if pt>=bins[-1]: return (vals[-1]+vals[-2])*0.5
+    else: print "no bin associated with pt =",pt
+
+def deepCSV_eff(pt):
+    bins = [0, 500, 750, 1000, 1250, 1500, 1750, 2000, 2500]
+    if BTAGGING=="medium":
+        vals = [0.20923, 0.172197, 0.0720872, 0.0457073, 0.0296515, 0.0169452, 0.0169157, 0.0169036]
+    elif BTAGGING=="loose":
+        vals = [0.669616, 0.560381, 0.438886, 0.340891, 0.269291, 0.227484, 0.20714, 0.168395]
+    else:
+        print "only medium and loose WP implemented so far"
+        val = None
+    for i in range(len(bins)-1):
+        if pt >= bins[i] and pt < bins[i+1]: return vals[i]
+    if pt>=bins[-1]: return (vals[-1]+vals[-2])*0.5
+    else: print "no bin associated with pt =",pt
+
+def deepCSV_mis(pt):
+    bins = [0, 500, 750, 1000, 1250, 1500, 1750, 2000, 2500]
+    if BTAGGING=="medium":
+        vals = [0.0103045, 0.00984539, 0.0106212, 0.00934899, 0.00953492, 0.00957432, 0.00928335, 0.00958614]
+    elif BTAGGING=="loose":
+        vals = [0.101894, 0.0975124, 0.105729, 0.0985992, 0.0918382, 0.0900662, 0.0948251, 0.105897]
+    else:
+        print "only medium and loose WP implemented so far"
+        val = None
+    for i in range(len(bins)-1):
+        if pt >= bins[i] and pt < bins[i+1]: return vals[i]
+    if pt>=bins[-1]: return (vals[-1]+vals[-2])*0.5
+    else: print "no bin associated with pt =",pt
+
 
 def plot(var, cut, year, norm=False, nm1=False):
-    from root_numpy import root2array, fill_hist
+    from root_numpy import root2array, fill_hist, array2root
+    import numpy.lib.recfunctions as rfn
     ### Preliminary Operations ###
     treeRead = not cut in ["nnqq", "en", "enqq", "mn", "mnqq", "ee", "eeqq", "mm", "mmqq", "em", "emqq", "qqqq"] # Read from tree
     channel = cut
@@ -96,11 +153,7 @@ def plot(var, cut, year, norm=False, nm1=False):
                     cut = cut.replace(k, alias[k].format(WP=working_points[BTAGGING]))
 
     
-    # Determine Primary Dataset
-    pd = sample['data_obs']['files']
-    
     print "Plotting from", ("tree" if treeRead else "file"), var, "in", channel, "channel with:"
-    print "  dataset:", pd
     print "  cut    :", cut
 
     if var == 'jj_deltaEta_widejet':
@@ -121,9 +174,8 @@ def plot(var, cut, year, norm=False, nm1=False):
     hist = {}
     
     ### Create and fill MC histograms ###
-    for i, s in enumerate(data+back+sign):
+    for i, s in enumerate(back+sign):
         if True: #FIXME
-
 
             if variable[var]['nbins']>0: 
                 hist[s] = TH1F(s, ";"+variable[var]['title']+";Events / ( "+str((variable[var]['max']-variable[var]['min'])/variable[var]['nbins'])+unit+" );"+('log' if variable[var]['log'] else ''), variable[var]['nbins'], variable[var]['min'], variable[var]['max'])
@@ -132,16 +184,29 @@ def plot(var, cut, year, norm=False, nm1=False):
             hist[s].Sumw2()
 
             for j, ss in enumerate(sample[s]['files']):
-                if not 'data' in s or ('data' in s and ss in pd):
-                    arr = root2array(NTUPLEDIR + ss + ".root", branches=[var, "jpt_1", "jpt_2", "eventWeightLumi", "TMath::Abs(jflavour_1)==5 && TMath::Abs(jflavour_2)==5", "TMath::Abs(jflavour_1)==5 && TMath::Abs(jflavour_2)!=5", "TMath::Abs(jflavour_1)!=5 && TMath::Abs(jflavour_2)==5", "TMath::Abs(jflavour_1)!=5 && TMath::Abs(jflavour_2)!=5"], selection = cut if len(cut)>0 else "")
-                    arr.dtype.names = [var, "jpt_1", "jpt_2", "eventWeightLumi", "bb", "bq", "qb", "qq"]
-                    MANtag_eff1 = np.array(map(MANtag_eff, arr["jpt_1"]))
-                    MANtag_eff2 = np.array(map(MANtag_eff, arr["jpt_2"]))
-                    MANtag_mis1 = np.array(map(MANtag_mis, arr["jpt_1"]))
-                    MANtag_mis2 = np.array(map(MANtag_mis, arr["jpt_2"]))
-                    MANtag_weight = np.multiply(arr['bb'], np.multiply(MANtag_eff1, MANtag_eff2)) + np.multiply(arr['bq'], np.multiply(MANtag_eff1, MANtag_mis2)) + np.multiply(arr['qb'], np.multiply(MANtag_mis1, MANtag_eff2)) + np.multiply(arr['qq'], np.multiply(MANtag_mis1, MANtag_mis2))
-                    fill_hist(hist[s], arr[var], weights=np.multiply(arr["eventWeightLumi"], MANtag_weight))
-                    arr=None
+                if not 'data' in s:
+                    if year=="run2" or year in ss:
+                        arr = root2array(NTUPLEDIR + ss + ".root", branches=[var, "jpt_1", "jpt_2", "eventWeightLumi", "TMath::Abs(jflavour_1)==5 && TMath::Abs(jflavour_2)==5", "TMath::Abs(jflavour_1)==5 && TMath::Abs(jflavour_2)!=5", "TMath::Abs(jflavour_1)!=5 && TMath::Abs(jflavour_2)==5", "TMath::Abs(jflavour_1)!=5 && TMath::Abs(jflavour_2)!=5"], selection = cut if len(cut)>0 else "")
+                        print "imported "+NTUPLEDIR + ss + ".root"
+                        arr.dtype.names = [var, "jpt_1", "jpt_2", "eventWeightLumi", "bb", "bq", "qb", "qq"]
+                        MANtag_eff1 = np.array(map(MANtag_eff, arr["jpt_1"]))
+                        MANtag_eff2 = np.array(map(MANtag_eff, arr["jpt_2"]))
+                        MANtag_mis1 = np.array(map(MANtag_mis, arr["jpt_1"]))
+                        MANtag_mis2 = np.array(map(MANtag_mis, arr["jpt_2"]))
+                        MANtag_weight = np.multiply(arr["eventWeightLumi"], np.multiply(arr['bb'], np.multiply(MANtag_eff1, MANtag_eff2)) + np.multiply(arr['bq'], np.multiply(MANtag_eff1, MANtag_mis2)) + np.multiply(arr['qb'], np.multiply(MANtag_mis1, MANtag_eff2)) + np.multiply(arr['qq'], np.multiply(MANtag_mis1, MANtag_mis2)) )
+                        fill_hist(hist[s], arr[var], weights=MANtag_weight)
+                        deepCSV_eff1 = np.array(map(deepCSV_eff, arr["jpt_1"]))
+                        deepCSV_eff2 = np.array(map(deepCSV_eff, arr["jpt_2"]))
+                        deepCSV_mis1 = np.array(map(deepCSV_mis, arr["jpt_1"]))
+                        deepCSV_mis2 = np.array(map(deepCSV_mis, arr["jpt_2"]))
+                        deepCSV_weight = np.multiply(arr["eventWeightLumi"], np.multiply(arr['bb'], np.multiply(deepCSV_eff1, deepCSV_eff2)) + np.multiply(arr['bq'], np.multiply(deepCSV_eff1, deepCSV_mis2)) + np.multiply(arr['qb'], np.multiply(deepCSV_mis1, deepCSV_eff2)) + np.multiply(arr['qq'], np.multiply(deepCSV_mis1, deepCSV_mis2)) )
+
+                        if var == "jj_mass_widejet" and options.save and not "data" in ss:
+                            arr = rfn.append_fields(arr, "MANtag_weight", MANtag_weight, usemask=False) 
+                            arr = rfn.append_fields(arr, "deepCSV_weight", deepCSV_weight, usemask=False) 
+                            array2root(arr, NTUPLEDIR+"MANtag/"+ss+"_"+BTAGGING+".root", treename="tree", mode='recreate')
+                            print "saved as", NTUPLEDIR+"MANtag/"+ss+"_"+BTAGGING+".root"
+                        arr=None
 
             #tree[s] = TChain("tree")
             #for j, ss in enumerate(sample[s]['files']):
@@ -182,8 +247,8 @@ def plot(var, cut, year, norm=False, nm1=False):
     hist['BkgSum'].SetFillColor(1)
     for i, s in enumerate(back): hist['BkgSum'].Add(hist[s])
     
-    if options.norm:
-        for i, s in enumerate(back + ['BkgSum']): hist[s].Scale(hist[data[0]].Integral()/hist['BkgSum'].Integral())
+    #if options.norm:
+    #    for i, s in enumerate(back + ['BkgSum']): hist[s].Scale(hist[data[0]].Integral()/hist['BkgSum'].Integral())
 
     # Create data and Bkg sum histograms
     if options.blind or 'SR' in channel:
@@ -193,7 +258,7 @@ def plot(var, cut, year, norm=False, nm1=False):
     hist['data_obs'].SetMarkerStyle(20)
     hist['data_obs'].SetMarkerSize(1.25)
     
-    for i, s in enumerate(data+back+sign+['BkgSum']): addOverflow(hist[s], False) # Add overflow
+    for i, s in enumerate(back+sign+['BkgSum']): addOverflow(hist[s], False) # Add overflow
     for i, s in enumerate(sign): hist[s].SetLineWidth(3)
     for i, s in enumerate(sign): sample[s]['plot'] = True#sample[s]['plot'] and s.startswith(channel[:2])
     
@@ -216,16 +281,6 @@ def plot(var, cut, year, norm=False, nm1=False):
             for i, s in enumerate(data):
                 first, last = hist[s].FindBin(0), hist[s].FindBin(0.6)
                 for j in range(first, last): hist[s].SetBinContent(j, -1.e-4)
-    
-    if SYNC and var == "jj_mass_widejet" and year in ["2016", "2017", "2018"]:
-        iFile = TFile("sync/JetHT_run" + year + "_red_cert_scan.root", "READ")
-        hist['sync'] = iFile.Get("Mjj")
-#        hist['sync'] = tmp.Rebin(len(dijet_bins)-1, "sync", array('d', dijet_bins))
-#        hist['sync'] = tmp.Rebin(100, "sync")
-        hist['sync'].SetMarkerStyle(31)
-        hist['sync'].SetMarkerSize(1.25)
-        hist['sync'].SetMarkerColor(2)
-        print "Imported and drawing sync file"
     
     # Create stack
     if variable[var]['nbins']>0: 

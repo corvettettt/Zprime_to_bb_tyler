@@ -1,0 +1,69 @@
+Combination of bb_2016=bb_2016_M7600.txt  bq_2016=bq_2016_M7600.txt  mumu_2016=mumu_2016_M7600.txt  bb_2017=bb_2017_M7600.txt  bq_2017=bq_2017_M7600.txt  mumu_2017=mumu_2017_M7600.txt  bb_2018=bb_2018_M7600.txt  bq_2018=bq_2018_M7600.txt  mumu_2018=mumu_2018_M7600.txt
+imax 9 number of bins
+jmax 17 number of processes minus 1
+kmax 28 number of nuisance parameters
+----------------------------------------------------------------------------------------------------------------------------------
+shapes Bkg_2016_bb           bb_2016               ./../workspace/medium/data_2016_bb.root Zprime_2016:Bkg_2016_bb
+shapes ZpBB_2016_bb_M7600    bb_2016               ./../workspace/medium/MC_bstar_2016_bb.root bstar_2016:ZpBB_2016_bb_M7600
+shapes data_obs              bb_2016               ./../workspace/medium/data_2016_bb.root Zprime_2016:data_obs
+shapes Bkg_2017_bb           bb_2017               ./../workspace/medium/data_2017_bb.root Zprime_2017:Bkg_2017_bb
+shapes ZpBB_2017_bb_M7600    bb_2017               ./../workspace/medium/MC_bstar_2017_bb.root bstar_2017:ZpBB_2017_bb_M7600
+shapes data_obs              bb_2017               ./../workspace/medium/data_2017_bb.root Zprime_2017:data_obs
+shapes Bkg_2018_bb           bb_2018               ./../workspace/medium/data_2018_bb.root Zprime_2018:Bkg_2018_bb
+shapes ZpBB_2018_bb_M7600    bb_2018               ./../workspace/medium/MC_bstar_2018_bb.root bstar_2018:ZpBB_2018_bb_M7600
+shapes data_obs              bb_2018               ./../workspace/medium/data_2018_bb.root Zprime_2018:data_obs
+shapes Bkg_2016_bq           bq_2016               ./../workspace/medium/data_2016_bq.root Zprime_2016:Bkg_2016_bq
+shapes ZpBB_2016_bq_M7600    bq_2016               ./../workspace/medium/MC_bstar_2016_bq.root bstar_2016:ZpBB_2016_bq_M7600
+shapes data_obs              bq_2016               ./../workspace/medium/data_2016_bq.root Zprime_2016:data_obs
+shapes Bkg_2017_bq           bq_2017               ./../workspace/medium/data_2017_bq.root Zprime_2017:Bkg_2017_bq
+shapes ZpBB_2017_bq_M7600    bq_2017               ./../workspace/medium/MC_bstar_2017_bq.root bstar_2017:ZpBB_2017_bq_M7600
+shapes data_obs              bq_2017               ./../workspace/medium/data_2017_bq.root Zprime_2017:data_obs
+shapes Bkg_2018_bq           bq_2018               ./../workspace/medium/data_2018_bq.root Zprime_2018:Bkg_2018_bq
+shapes ZpBB_2018_bq_M7600    bq_2018               ./../workspace/medium/MC_bstar_2018_bq.root bstar_2018:ZpBB_2018_bq_M7600
+shapes data_obs              bq_2018               ./../workspace/medium/data_2018_bq.root Zprime_2018:data_obs
+shapes Bkg_2016_mumu         mumu_2016             ./../workspace/medium/data_2016_mumu.root Zprime_2016:Bkg_2016_mumu
+shapes ZpBB_2016_mumu_M7600  mumu_2016             ./../workspace/medium/MC_bstar_2016_mumu.root bstar_2016:ZpBB_2016_mumu_M7600
+shapes data_obs              mumu_2016             ./../workspace/medium/data_2016_mumu.root Zprime_2016:data_obs
+shapes Bkg_2017_mumu         mumu_2017             ./../workspace/medium/data_2017_mumu.root Zprime_2017:Bkg_2017_mumu
+shapes ZpBB_2017_mumu_M7600  mumu_2017             ./../workspace/medium/MC_bstar_2017_mumu.root bstar_2017:ZpBB_2017_mumu_M7600
+shapes data_obs              mumu_2017             ./../workspace/medium/data_2017_mumu.root Zprime_2017:data_obs
+shapes Bkg_2018_mumu         mumu_2018             ./../workspace/medium/data_2018_mumu.root Zprime_2018:Bkg_2018_mumu
+shapes ZpBB_2018_mumu_M7600  mumu_2018             ./../workspace/medium/MC_bstar_2018_mumu.root bstar_2018:ZpBB_2018_mumu_M7600
+shapes data_obs              mumu_2018             ./../workspace/medium/data_2018_mumu.root Zprime_2018:data_obs
+----------------------------------------------------------------------------------------------------------------------------------
+bin          bb_2016         bq_2016         mumu_2016       bb_2017         bq_2017         mumu_2017       bb_2018         bq_2018         mumu_2018     
+observation  -1              -1              -1              -1              -1              -1              -1              -1              -1            
+----------------------------------------------------------------------------------------------------------------------------------
+bin                                     bb_2016               bb_2016               bq_2016               bq_2016               mumu_2016             mumu_2016             bb_2017               bb_2017               bq_2017               bq_2017               mumu_2017             mumu_2017             bb_2018               bb_2018               bq_2018               bq_2018               mumu_2018             mumu_2018           
+process                                 ZpBB_2016_bb_M7600    Bkg_2016_bb           ZpBB_2016_bq_M7600    Bkg_2016_bq           ZpBB_2016_mumu_M7600  Bkg_2016_mumu         ZpBB_2017_bb_M7600    Bkg_2017_bb           ZpBB_2017_bq_M7600    Bkg_2017_bq           ZpBB_2017_mumu_M7600  Bkg_2017_mumu         ZpBB_2018_bb_M7600    Bkg_2018_bb           ZpBB_2018_bq_M7600    Bkg_2018_bq           ZpBB_2018_mumu_M7600  Bkg_2018_mumu       
+process                                 -8                    1                     -7                    2                     -6                    3                     -5                    4                     -4                    5                     -3                    6                     -2                    7                     -1                    8                     0                     9                   
+rate                                    1                     1                     1                     1                     1                     1                     1                     1                     1                     1                     1                     1                     1                     1                     1                     1                     1                     1                   
+----------------------------------------------------------------------------------------------------------------------------------
+btag_2016_bb_M7600      lnN             1.15020400082         -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                   
+btag_2016_bq_M7600      lnN             -                     -                     1.03681406267         -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                   
+btag_2016_mumu_M7600    lnN             -                     -                     -                     -                     0.896164785103        -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                   
+btag_2017_bb_M7600      lnN             -                     -                     -                     -                     -                     -                     1.15110519981         -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                   
+btag_2017_bq_M7600      lnN             -                     -                     -                     -                     -                     -                     -                     -                     1.07278050999         -                     -                     -                     -                     -                     -                     -                     -                     -                   
+btag_2017_mumu_M7600    lnN             -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     1.01790378344         -                     -                     -                     -                     -                     -                     -                   
+btag_2018_bb_M7600      lnN             -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     1.2954474635          -                     -                     -                     -                     -                   
+btag_2018_bq_M7600      lnN             -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     1.13657242051         -                     -                     -                   
+btag_2018_mumu_M7600    lnN             -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     -                     1.01702416474         -                   
+lumi                    lnN             1.026                 -                     1.026                 -                     1.026                 -                     1.026                 -                     1.026                 -                     1.026                 -                     1.026                 -                     1.026                 -                     1.026                 -                   
+CMS2016sig_bq_p2_jer  param  0.0 1.0
+CMS2017sig_mumu_p2_jer  param  0.0 1.0
+CMS2016sig_mumu_p2_jer  param  0.0 1.0
+CMS2017sig_bb_p2_jer  param  0.0 1.0
+CMS2016sig_bq_p1_jes  param  0.0 1.0
+CMS2016sig_bb_p2_jer  param  0.0 1.0
+CMS2017sig_bq_p1_jes  param  0.0 1.0
+CMS2017sig_mumu_p1_jes  param  0.0 1.0
+CMS2017sig_bb_p1_jes  param  0.0 1.0
+CMS2018sig_bb_p1_jes  param  0.0 1.0
+CMS2018sig_bq_p2_jer  param  0.0 1.0
+CMS2018sig_bq_p1_jes  param  0.0 1.0
+CMS2016sig_mumu_p1_jes  param  0.0 1.0
+CMS2018sig_bb_p2_jer  param  0.0 1.0
+CMS2018sig_mumu_p1_jes  param  0.0 1.0
+CMS2018sig_mumu_p2_jer  param  0.0 1.0
+CMS2017sig_bq_p2_jer  param  0.0 1.0
+CMS2016sig_bb_p1_jes  param  0.0 1.0

@@ -71,6 +71,11 @@ data:
 ```
 ./submit.py -q workday -y [year] -n 1 -mn
 ```
+single muon data (trigger efficiency study):
+```
+./submit.py -q workday -y [year] -n 1 -mn -Tr
+```
+
 
 ## check if the samples have finished correctly:
 ```
@@ -95,6 +100,12 @@ output in: *global_paths.PRODUCTIONDIR*
 ./postprocessors/skim.py
 ```
 output in *global_paths.WEIGHTEDDIR*
+
+trigger study:
+```
+./postprocessors/skim_SingleMuon.py
+```
+output in *global_paths.SKIMMEDDIR/TriggerStudy*
 
 ### add weights, even to the data and MC signal:    
 
@@ -124,9 +135,9 @@ Plot_all.sh all
 ```
 output in: *plots/[preselection, 1b, 2b]/*
 
-## signal acceptance and efficiency
+## signal acceptance, trigger efficiency and signal efficiency
 
-[year]: 2016, 2017, 2018, run2
+[year]: 2016, 2017, 2018
 
 extract genParticle information from NanoAOD by running:
 ```
@@ -137,6 +148,11 @@ output in *acceptance/*
 then plot acceptance as a function of mass points:
 ```
 Plot_all.sh acc
+```
+
+plot the trigger efficiency:
+```
+Plot_all.sh trig
 ```
 
 and plot the efficiency:
@@ -157,6 +173,14 @@ output in: *plots/Efficiency*
 fit on the MC signal: 
 ```
 ./Signal_Fitter.py -y [year] -b [btagging]
+```
+before running the signal fits for the first time, one might need to load the signal model:
+```
+cd PDFs/
+root -l
+.L HWWLVJRooPdfs.cxx++
+.q 
+cd ..
 ```
 
 fit on MC background:

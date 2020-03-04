@@ -1,0 +1,15 @@
+Error in <TFile::TFile>: file ./workspace/medium/MC_QCD_TTbar_2017_bb.root does not exist
+Traceback (most recent call last):
+  File "/afs/cern.ch/work/z/zhixing/private/CMSSW_10_2_13/bin/slc6_amd64_gcc700/text2workspace.py", line 63, in <module>
+    MB.doModel()
+  File "/afs/cern.ch/work/z/zhixing/private/CMSSW_10_2_13/python/HiggsAnalysis/CombinedLimit/ModelTools.py", line 110, in doModel
+    self.doObservables()
+  File "/afs/cern.ch/work/z/zhixing/private/CMSSW_10_2_13/python/HiggsAnalysis/CombinedLimit/ShapeTools.py", line 33, in doObservables
+    self.prepareAllShapes();
+  File "/afs/cern.ch/work/z/zhixing/private/CMSSW_10_2_13/python/HiggsAnalysis/CombinedLimit/ShapeTools.py", line 287, in prepareAllShapes
+    shape = self.getShape(b,p); norm = 0;
+  File "/afs/cern.ch/work/z/zhixing/private/CMSSW_10_2_13/python/HiggsAnalysis/CombinedLimit/ShapeTools.py", line 463, in getShape
+    if not file: raise RuntimeError, "Cannot open file %s (from pattern %s)" % (finalNames[0],names[0])
+RuntimeError: Cannot open file ./workspace/medium/MC_QCD_TTbar_2017_bb.root (from pattern ./workspace/medium/MC_QCD_TTbar_2017_bb.root)
+Error when running the combination:
+	Failed to convert the input datacard from LandS to RooStats format. The lines above probably contain more information about the error.

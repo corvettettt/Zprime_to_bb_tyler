@@ -13,8 +13,8 @@ higgsCombine() {
     upper_mass=$4
     mass=$(echo $inputfile | sed s/2016// | sed s/2017// | sed s/2018// | sed s/run2// |tr -dc '0-9') #delete every character except the numbers. First removes the year
 
-    if [[ $lower_mass -lt 1800 ]] ## FIXME
-    then lower_mass=1799
+    if [[ $lower_mass -lt 1600 ]]
+    then lower_mass=1599
     fi
 
     if [[ $mass -gt $lower_mass ]] && [[ $mass -le $upper_mass ]]; then
@@ -34,11 +34,19 @@ isMC=$3
 category=$4
 #####################################
 
+if [[ $year == run2c ]]; then
+    echo "Combining the 2016-2018 fits separately into a single limit..."
+    year="run2"
+    combined=1
+else
+    combined=0
+fi
+
 if [[ $isMC -eq 1 ]]; then
     echo "running purely on MC..."
-    suffix="_MC.txt"
+    suffix="0_MC.txt"
 else
-    suffix=".txt"
+    suffix="0.txt"
 fi
 
 for low_mass in 1000 2000 3000 4000 5000 6000 7000; do
@@ -46,10 +54,17 @@ for low_mass in 1000 2000 3000 4000 5000 6000 7000; do
 
     echo "low_mass=${low_mass}, high_mass=${high_mass}"
 
-    for card in datacards/${btagging}/${category}_${year}_*${suffix}; do
-        output=$(echo $card | sed s:datacards/:combine/limits/: | sed s:${btagging}/:${btagging}/single_category/:)
-        higgsCombine $card $output $low_mass $high_mass &
-    done
+    if [[ $combined -eq 1 ]]; then
+        for card in datacards/${btagging}/${category}_combined_run2_*${suffix}; do
+            output=$(echo $card | sed s:datacards/:combine/limits/: | sed s:combined_:: | sed s:${btagging}/:${btagging}/single_category/combined_run2/:)
+            higgsCombine $card $output $low_mass $high_mass &
+        done
+    else
+        for card in datacards/${btagging}/${category}_${year}_*${suffix}; do
+            output=$(echo $card | sed s:datacards/:combine/limits/: | sed s:${btagging}/:${btagging}/single_category/:)
+            higgsCombine $card $output $low_mass $high_mass &
+        done
+    fi
     wait
 done
 

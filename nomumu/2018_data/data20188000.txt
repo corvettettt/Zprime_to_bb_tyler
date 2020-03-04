@@ -1,0 +1,14 @@
+ <<< Combine >>> 
+>>> method used is AsymptoticLimits
+>>> random number generator seed is 123456
+/afs/cern.ch/work/z/zhixing/private/CMSSW_10_3_3/src/Zprime_to_bb/2018_data/../datacards/medium/bstar/combined/combined_2018_M8000.txt
+
+ -- AsymptoticLimits ( CLs ) --
+Observed Limit: r < 0.8461
+Expected  2.5%: r < 0.6878
+Expected 16.0%: r < 0.9769
+Expected 50.0%: r < 1.4922
+Expected 84.0%: r < 2.3427
+Expected 97.5%: r < 3.5602
+
+Done in 1.75 min (cpu), 1.76 min (real)

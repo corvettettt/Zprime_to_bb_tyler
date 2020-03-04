@@ -12,12 +12,15 @@ reduced_triggers = "(HLT_PFHT1050==1 || HLT_PFHT900==1 || HLT_PFJet500==1 || HLT
 
 triggers = "(HLT_PFHT1050==1 || HLT_PFHT900==1 || HLT_PFJet500==1 || HLT_PFJet550==1 || HLT_CaloJet500_NoJetID==1 || HLT_CaloJet550_NoJetID==1 || HLT_AK8PFJet500==1 || HLT_AK8PFJet550==1 || HLT_DoublePFJets100_CaloBTagDeepCSV_p71==1 || HLT_DoublePFJets116MaxDeta1p6_DoubleCaloBTagDeepCSV_p71==1 || HLT_DoublePFJets128MaxDeta1p6_DoubleCaloBTagDeepCSV_p71==1 || HLT_DoublePFJets200_CaloBTagDeepCSV_p71==1 || HLT_DoublePFJets350_CaloBTagDeepCSV_p71==1 || HLT_DoublePFJets40_CaloBTagDeepCSV_p71==1)"
 
+triggers_PFHT   = "(HLT_PFHT1050==1 || HLT_PFHT900==1)"
+triggers_Jet    = "(HLT_PFJet500==1 || HLT_PFJet550==1 || HLT_CaloJet500_NoJetID==1 || HLT_CaloJet550_NoJetID==1 || HLT_AK8PFJet500==1 || HLT_AK8PFJet550==1)"
+triggers_BTag   = "(HLT_DoublePFJets100_CaloBTagDeepCSV_p71==1 || HLT_DoublePFJets116MaxDeta1p6_DoubleCaloBTagDeepCSV_p71==1 || HLT_DoublePFJets128MaxDeta1p6_DoubleCaloBTagDeepCSV_p71==1 || HLT_DoublePFJets200_CaloBTagDeepCSV_p71==1 || HLT_DoublePFJets350_CaloBTagDeepCSV_p71==1 || HLT_DoublePFJets40_CaloBTagDeepCSV_p71==1)"
+
 AK8veto = " && !(fatjetmass_1>65 && fatjetmass_2>65)"
 electronVeto = " && nelectrons<1"
 muonVeto = " && nmuons<1"
 
-#tight_jetID = " && jid_1>1 && jid_2>1"
-tight_jetID = " && jid_1>5 && jid_2>5" #&& jcef_1<0.9 && jcef_2<0.9"
+tight_jetID = " && jid_1>5 && jid_2>5"
 
 preselection = "jj_mass_widejet>1530 && jj_deltaEta_widejet<1.1 && "
 

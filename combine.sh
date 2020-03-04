@@ -17,12 +17,10 @@ echo
 echo 'START---------------'
 workdir=$(pwd)
 echo "workdir = $workdir"
-#cd /afs/cern.ch/user/m/msommerh/CMSSW_10_2_13/src/HiggsAnalysis/CombinedLimit
 cd $combine_dir
 eval `scram runtime -sh`
 cd $workdir
 
-#export X509_USER_PROXY=/afs/cern.ch/user/m/msommerh/x509up_msommerh
 export X509_USER_PROXY=$grid_cert
 use_x509userproxy=true
 

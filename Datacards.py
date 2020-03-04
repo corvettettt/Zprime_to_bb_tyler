@@ -55,8 +55,8 @@ if BTAGGING not in ['tight', 'medium', 'loose', 'semimedium']:
 categories = ['bb', 'bq', 'mumu']
 
 #massPoints = [1000, 1200, 1400, 1600, 1800, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 7000, 8000]
-massPoints = [x for x in range(1200, 8000+1, 100)]
-genPoints = [1200, 1400, 1600, 1800, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 7000, 8000]
+massPoints = [x for x in range(1600, 8000+1, 100)]
+genPoints = [1600, 1800, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 7000, 8000]
 
 if not os.path.exists(PLOTDIR):
     os.makedirs(PLOTDIR)

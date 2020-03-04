@@ -1,0 +1,8 @@
+arguments             = $(ProcId)
+executable            = condor/submit_bstar_template_run2.sh
+output                = condor/output/run2_medium.$(ClusterId).$(ProcId).out
+error                 = condor/error/run2_medium.$(ClusterId).$(ProcId).err
+log                   = condor/log/run2_medium.$(ClusterId).log
++JobFlavour           = "longlunch"
+transfer_output_files = ""
+queue 65 

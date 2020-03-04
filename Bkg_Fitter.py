@@ -71,7 +71,7 @@ SHOWERR     = True
 BLIND       = False
 VERBOSE     = options.verbose
 CUTCOUNT    = False
-VARBINS     = True ## FIXME testing dijet bins FIXME (currently turned on)
+VARBINS     = True
 BIAS        = options.bias
 YEAR        = options.year
 ISMC        = options.isMC
@@ -121,8 +121,6 @@ if VARBINS:
     X_max = max(bins)
     abins = array( 'd', bins )
     narrow_bins = extend_binning(10, bins)
-    print "dijet bins:", bins
-    print "narrow bins:", narrow_bins
     abins_narrow = array('d', narrow_bins)
 else:
     X_min = X_MIN-X_MIN%10
@@ -171,6 +169,8 @@ def dijet(category):
     fatjetmass_2 = RooRealVar("fatjetmass_2",   "",             -1.,   2500.     )
     jnmuons_1 = RooRealVar("jnmuons_1",     "j1 n_{#mu}",       -1.,   8.     )
     jnmuons_2 = RooRealVar("jnmuons_2",     "j2 n_{#mu}",       -1.,   8.     )
+    jmuonpt_1 = RooRealVar(   "jmuonpt_1",      "j1 muon pt",    0.,   13000.)
+    jmuonpt_2 = RooRealVar(   "jmuonpt_2",      "j2 muon pt",    0.,   13000.)
     jid_1 = RooRealVar("jid_1",     "j1 ID",       -1.,   8.     )
     jid_2 = RooRealVar("jid_2",     "j2 ID",       -1.,   8.     )
     nmuons = RooRealVar(    "nmuons",       "n_{#mu}",          -1.,   10.     )
@@ -196,7 +196,7 @@ def dijet(category):
 
     variables = RooArgSet(X_mass)
     variables.add(RooArgSet(jbtag_WP_1, jbtag_WP_2, fatjetmass_1, fatjetmass_2, jnmuons_1, jnmuons_2, nmuons, nelectrons, weight))
-    variables.add(RooArgSet(j1_pt, jj_deltaEta, jid_1, jid_2))
+    variables.add(RooArgSet(j1_pt, jj_deltaEta, jid_1, jid_2, jmuonpt_1, jmuonpt_2))
     variables.add(RooArgSet(HLT_AK8PFJet500, HLT_PFJet500, HLT_CaloJet500_NoJetID, HLT_PFHT900, HLT_AK8PFJet550, HLT_PFJet550, HLT_CaloJet550_NoJetID, HLT_PFHT1050))
     variables.add(RooArgSet(HLT_DoublePFJets100_CaloBTagDeepCSV_p71, HLT_DoublePFJets116MaxDeta1p6_DoubleCaloBTagDeepCSV_p71, HLT_DoublePFJets128MaxDeta1p6_DoubleCaloBTagDeepCSV_p71, HLT_DoublePFJets200_CaloBTagDeepCSV_p71, HLT_DoublePFJets350_CaloBTagDeepCSV_p71, HLT_DoublePFJets40_CaloBTagDeepCSV_p71))
 
@@ -251,7 +251,7 @@ def dijet(category):
     
     lastBin = X_mass.getMax()
     if VARBINS: 
-        for b in narrow_bins: ##FIXME switched to narrow bins here
+        for b in narrow_bins: # switched to narrow bins here
             if b > xmax:
                 lastBin = b
                 break
@@ -340,27 +340,31 @@ def dijet(category):
         CL_high = False
         for o1 in range(1, 5):
             o2 = min(o1 + 1, 5)
-            fout.write( "%d par & %.2f & %.2f & %d & " % (o1+1, RSS[o1]["chi2"], RSS[o1]["rss"], RSS[o1]["nbins"]-RSS[o1]["npar"]))
             if o2 > len(RSS):
+                fout.write( "%d par & %.2f & %.2f & %d & " % (o1+1, RSS[o1]["chi2"], RSS[o1][
+"rss"], RSS[o1]["nbins"]-RSS[o1]["npar"]))
                 fout.write(r"\\")
                 fout.write("\n")
                 continue #order==0 and 
+
             CL = fisherTest(RSS[o1]['rss'], RSS[o2]['rss'], o1+1., o2+1., RSS[o1]["nbins"])
-            fout.write("CL=%.3f " % (CL))
             if CL > 0.10: # The function with less parameters is enough
                 if not CL_high:
                     order = o1
-                    #fout.write( "%d par are sufficient " % (o1+1))
+                    fout.write( "\\rowcolor{MarkerColor}\n")
                     CL_high=True
             else:
                 #fout.write( "%d par are needed " % (o2+1))
                 if not CL_high:
                     order = o2
+            fout.write( "%d par & %.2f & %.2f & %d & " % (o1+1, RSS[o1]["chi2"], RSS[o1]["rss"], RSS[o1]["nbins"]-RSS[o1]["npar"]))
+            fout.write("CL=%.3f " % (CL))
             fout.write(r"\\")
             fout.write("\n")
         fout.write("\hline")
         fout.write("\n")
         fout.write(r"\end{tabular}")
+
     print "saved F-test table as", PLOTDIR+"/Fisher_"+category+".tex"
 
     #print "-"*25
@@ -479,7 +483,8 @@ def dijet(category):
     drawAnalysis(category)
     drawRegion(category, True)
     #drawCMS(LUMI, "Simulation Preliminary")
-    drawCMS(LUMI, "Work in Progress", suppressCMS=True)
+    #drawCMS(LUMI, "Work in Progress", suppressCMS=True)
+    drawCMS(LUMI, "", suppressCMS=True)
 
     leg = TLegend(0.575, 0.6, 0.95, 0.9)
     leg.SetBorderSize(0)
@@ -610,7 +615,8 @@ def drawFit(name, category, variable, model, dataset, binning, fitRes=[], norm=-
     drawAnalysis(category)
     drawRegion(category, True)
     #drawCMS(LUMI, "Simulation Preliminary")
-    drawCMS(LUMI, "Work in Progress", suppressCMS=True)
+    #drawCMS(LUMI, "Work in Progress", suppressCMS=True)
+    drawCMS(LUMI, "", suppressCMS=True)
 
     c.cd(2)
     frame_res = variable.frame()

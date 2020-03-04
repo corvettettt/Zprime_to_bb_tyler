@@ -16,7 +16,7 @@ from ROOT import TLegend, TLatex, TText, TColor
 
 #from DMPD.Heppy.tools.samples import *
 from utils import *
-from hvtXs import HVT
+from theoryXs import HVT, SSM
 
 #from thdmXs import THDM
 
@@ -40,8 +40,10 @@ parser.add_option("-y", "--year", action="store", type="string", dest="year",def
 parser.add_option("-M", "--isMC", action="store_true", default=False, dest="isMC")
 parser.add_option("-c", "--category", action="store", type="string", dest="category", default="")
 parser.add_option("-B", "--blind", action="store_true", default=False, dest="blind")
-parser.add_option("-b", "--btagging", action="store", type="string", dest="btagging", default="tight")
+parser.add_option("-b", "--btagging", action="store", type="string", dest="btagging", default="medium")
+parser.add_option("-A", "--Acceptance", action="store_true", default=False, dest="Acceptance")
 (options, args) = parser.parse_args()
+ 
 gStyle.SetOptStat(0)
 
 gROOT.SetBatch(True)
@@ -56,6 +58,9 @@ BTAGGING    = options.btagging
 YEAR        = options.year
 ISMC        = options.isMC
 CATEGORY    = options.category
+INCLUDEACC  = options.Acceptance
+
+CAT_LABELS  = {'bb': "2 b tag", 'bq': "1 b tag", 'mumu': "2 #mu"}
 
 if YEAR not in ['2016', '2017', '2018', 'run2', 'run2c']:
     print "unknown year:", YEAR
@@ -80,10 +85,13 @@ LUMI        = luminosities[YEAR]
 
 SIGNALS = range(1600, 8000+1, 100)
 
-theoryLabel = {'B3' : "HVT model B (g_{V}=3)", 'A1' : "HVT model A (g_{V}=1)", 'T1' : "2HDM Type-I", 'T2' : "2HDM Type-II"}
-theoryLineColor = {'B3' : 629, 'A1' : 616-3, 'T1' : 880-4, 'T2' : 602}
-theoryFillColor = {'B3' : 625, 'A1' : 616-7, 'T1' : 880-9, 'T2' : 856}
-theoryFillStyle = {'B3' : 3002, 'A1' : 3013, 'T1' : 3002, 'T2' : 3013}
+ACCEPTANCE = {}
+for s in range(500,9000+1,100): ACCEPTANCE[s] = 0.405 ##FIXME could include mass dependent exact value FIXME
+
+theoryLabel = {'B3' : "HVT model B (g_{V}=3)", 'A1' : "HVT model A (g_{V}=1)", "SSM" : "SSM Z'"}
+theoryLineColor = {'B3' : 629, 'A1' : 616-3, "SSM" : 602}
+theoryFillColor = {'B3' : 625, 'A1' : 616-7, 'SSM' : 856}
+theoryFillStyle = {'B3' : 3002, 'A1' : 3013, 'SSM' : 3013}
 
 
 def fillValues(filename):
@@ -112,22 +120,30 @@ def fillValues(filename):
 def limit():
     method = ''
     channel = "bb"
-    particleP = "Z'"
-    particle = channel
+    if INCLUDEACC:
+        particleP = "X"
+    else:
+        particleP = "Z'"
+    particle = 'b#bar{b}'
     multF = ZPTOBB
     THEORY = ['A1', 'B3']
-    
+    if INCLUDEACC: THEORY.append('SSM')
+ 
     suffix = "_"+BTAGGING
     if ISMC: suffix += "_MC"
     if SY: suffix += "_comb"
     #if method=="cls": suffix="_CLs"
+    if INCLUDEACC: suffix+="_acc"
 
     if SY:
         filename = "./combine/limits/" + BTAGGING + "/combined_run2/"+ YEAR + "_M%d.txt"
     else:
         filename = "./combine/limits/" + BTAGGING + "/"+ YEAR + "_M%d.txt"
-    if CATEGORY!="": 
-        filename = filename.replace(BTAGGING + "/", BTAGGING + "/single_category/"+CATEGORY+"_")
+    if CATEGORY!="":
+        if SY:
+            filename = filename.replace(BTAGGING + "/combined_run2/", BTAGGING + "/single_category/combined_run2/"+CATEGORY+"_")
+        else:
+            filename = filename.replace(BTAGGING + "/", BTAGGING + "/single_category/"+CATEGORY+"_")
         suffix += "_"+CATEGORY
     if ISMC: filename = filename.replace(".txt", "_MC.txt")
     mass, val = fillValues(filename)
@@ -149,13 +165,18 @@ def limit():
             print "Key Error:", m, "not in value map"
             continue
 
+        if INCLUDEACC:
+            acc_factor = ACCEPTANCE[m]
+        else:
+            acc_factor = 1.
+
         n = Exp0s.GetN()
-        Obs0s.SetPoint(n, m, val[m][0]*multF)
-        Exp0s.SetPoint(n, m, val[m][3]*multF)
-        Exp1s.SetPoint(n, m, val[m][3]*multF)
-        Exp1s.SetPointError(n, 0., 0., val[m][3]*multF-val[m][2]*multF, val[m][4]*multF-val[m][3]*multF)
-        Exp2s.SetPoint(n, m, val[m][3]*multF)
-        Exp2s.SetPointError(n, 0., 0., val[m][3]*multF-val[m][1]*multF, val[m][5]*multF-val[m][3]*multF)
+        Obs0s.SetPoint(n, m, val[m][0]*multF*acc_factor)
+        Exp0s.SetPoint(n, m, val[m][3]*multF*acc_factor)
+        Exp1s.SetPoint(n, m, val[m][3]*multF*acc_factor)
+        Exp1s.SetPointError(n, 0., 0., (val[m][3]-val[m][2])*multF*acc_factor, (val[m][4]-val[m][3])*multF*acc_factor)
+        Exp2s.SetPoint(n, m, val[m][3]*multF*acc_factor)
+        Exp2s.SetPointError(n, 0., 0., (val[m][3]-val[m][1])*multF*acc_factor, (val[m][5]-val[m][3])*multF*acc_factor)
         if len(val[m]) > 6: Sign.SetPoint(n, m, val[m][6])
         if len(val[m]) > 7: pVal.SetPoint(n, m, val[m][7])
         if len(val[m]) > 8: Best.SetPoint(n, m, val[m][8])
@@ -164,19 +185,29 @@ def limit():
 
     for t in THEORY:
         Theory[t] = TGraphAsymmErrors()
-        addXZH = True
-        for m in sorted(HVT[t]['W']['XS'].keys()):
-            if m < mass[0] or m > mass[-1]: continue
-            if m>4500: continue ## for now because I don't have the higher mass xs FIXME
+        Xs_dict = HVT[t]['Z']['XS'] if t!='SSM' else SSM['Z']
+        for m in sorted(Xs_dict.keys()):
+            if INCLUDEACC and t!='SSM':
+                acc_factor = ACCEPTANCE[m]
+            else:
+                acc_factor = 1.
+            if m < SIGNALS[0] or m > SIGNALS[-1]: continue
+            #if m < mass[0] or m > mass[-1]: continue
+            #if t!= 'SSM' and m>4500: continue ## I don't have the higher mass xs
+            if m>4500: continue
             XsZ, XsZ_Up, XsZ_Down = 0., 0., 0.
-            if addXZH:
-                XsZ = 1000.*HVT[t]['Z']['XS'][m]*0.12 #temporary BR value set to 0.12 FIXME
+            if t!='SSM':
+                XsZ = 1000.*HVT[t]['Z']['XS'][m]*SSM["BrZ"][m] #assuming the same BR as the SSM Z' one
                 XsZ_Up = XsZ*(1.+math.hypot(HVT[t]['Z']['QCD'][m][0]-1., HVT[t]['Z']['PDF'][m][0]-1.))
                 XsZ_Down = XsZ*(1.-math.hypot(1.-HVT[t]['Z']['QCD'][m][0], 1.-HVT[t]['Z']['PDF'][m][0]))
-
+            else:
+                XsZ = 1000.*SSM['Z'][m]*SSM["BrZ"][m]
+                XsZ_Up = XsZ*(1.+math.hypot(HVT['A1']['Z']['QCD'][m][0]-1., HVT['A1']['Z']['PDF'][m][0]-1.))
+                XsZ_Down = XsZ*(1.-math.hypot(1.-HVT['A1']['Z']['QCD'][m][0], 1.-HVT['A1']['Z']['PDF'][m][0]))
+     
             n = Theory[t].GetN()
-            Theory[t].SetPoint(n, m, XsZ)
-            Theory[t].SetPointError(n, 0., 0., (XsZ-XsZ_Down), (XsZ_Up-XsZ))
+            Theory[t].SetPoint(n, m, XsZ*acc_factor)
+            Theory[t].SetPointError(n, 0., 0., (XsZ-XsZ_Down)*acc_factor, (XsZ_Up-XsZ)*acc_factor)
 
             Theory[t].SetLineColor(theoryLineColor[t])
             Theory[t].SetFillColor(theoryFillColor[t])
@@ -200,7 +231,7 @@ def limit():
     Exp2s.GetXaxis().SetTitleSize(Exp2s.GetXaxis().GetTitleSize()*1.25)
     Exp2s.GetXaxis().SetNoExponent(True)
     Exp2s.GetXaxis().SetMoreLogLabels(True)
-    Exp2s.GetYaxis().SetTitle("#sigma("+particleP+") #bf{#it{#Beta}}("+particleP+" #rightarrow "+particle+") (fb)")
+    Exp2s.GetYaxis().SetTitle("#sigma("+particleP+") #bf{#it{#Beta}}("+particleP+" #rightarrow "+particle+"){} (fb)".format(" #times #Alpha" if INCLUDEACC else ""))
     Exp2s.GetYaxis().SetTitleOffset(1.5)
     Exp2s.GetYaxis().SetNoExponent(True)
     Exp2s.GetYaxis().SetMoreLogLabels()
@@ -253,7 +284,10 @@ def limit():
     Exp2s.GetYaxis().SetTitleOffset(1.25)
     Exp2s.GetYaxis().SetMoreLogLabels(True)
     Exp2s.GetYaxis().SetNoExponent(True)
-    Exp2s.GetYaxis().SetRangeUser(0.1, 5.e3)
+    if INCLUDEACC:
+        Exp2s.GetYaxis().SetRangeUser(0.05, 5.e3)
+    else:
+        Exp2s.GetYaxis().SetRangeUser(0.1, 5.e3)
     #else: Exp2s.GetYaxis().SetRangeUser(0.1, 1.e2)
     #Exp2s.GetXaxis().SetRangeUser(mass[0], min(mass[-1], MAXIMUM[channel] if channel in MAXIMUM else 1.e6))
     Exp2s.GetXaxis().SetRangeUser(SIGNALS[0], SIGNALS[-1])
@@ -262,7 +296,12 @@ def limit():
     #drawRegion(channel, True)
     drawRegion("", True)
     #drawCMS(LUMI, "Simulation Preliminary") #Preliminary
-    drawCMS(LUMI, "Work in Progress", suppressCMS=True)
+    if CATEGORY=="": 
+        #drawCMS(LUMI, "Work in Progress", suppressCMS=True)
+        drawCMS(LUMI, "", suppressCMS=True)
+    else:
+         #drawCMS(LUMI, "Work in Progress, "+CAT_LABELS[CATEGORY], suppressCMS=True)       
+         drawCMS(LUMI, CAT_LABELS[CATEGORY], suppressCMS=True)       
 
     # legend
     top = 0.9

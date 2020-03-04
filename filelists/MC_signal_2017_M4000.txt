@@ -1,0 +1,1 @@
+# created from /ZprimeToBB_narrow_M-4000_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17NanoAODv5-PU2017_12Apr2018_Nano1June2019_102X_mc2017_realistic_v7-v1/NANOAODSIM

@@ -1,0 +1,2 @@
+Error in <TFile::TFile>: file higgsCombineTest.AsymptoticLimits.mH1600.root already exists
+Error in <TFile::WriteTObject>: Directory higgsCombineTest.AsymptoticLimits.mH1600.root is not writable

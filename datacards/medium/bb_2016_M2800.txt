@@ -1,0 +1,20 @@
+imax 1
+jmax 1
+kmax *
+-----------------------------------------------------------------------------------
+shapes         ZpBB_2016_bb_M2800  *    ./workspace/medium/MC_signal_2016_bb.root     Zprime_2016:ZpBB_2016_bb_M2800
+shapes         Bkg_2016_bb  *    ./workspace/medium/data_2016_bb.root    Zprime_2016:Bkg_2016_bb
+shapes         data_obs  *    ./workspace/medium/data_2016_bb.root    Zprime_2016:data_obs
+-----------------------------------------------------------------------------------
+bin                              bb
+observation                      -1
+-----------------------------------------------------------------------------------
+bin                              bb                       bb                       
+process                          ZpBB_2016_bb_M2800       Bkg_2016_bb              
+process                          0                        1                        
+rate                             1                        1                        
+-----------------------------------------------------------------------------------
+lumi                     lnN     1.026                    -                        
+btag_2016_bb_M2800       lnN     1.10778738904            -                        
+CMS2016sig_bb_p1_jes     param   0.0                      1.0                      
+CMS2016sig_bb_p2_jer     param   0.0                      1.0                      

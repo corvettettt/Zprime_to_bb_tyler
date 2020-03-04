@@ -1,0 +1,27 @@
+Combination of bb=bb_2016_M3900.txt  bq=bq_2016_M3900.txt
+imax 2 number of bins
+jmax 3 number of processes minus 1
+kmax 7 number of nuisance parameters
+----------------------------------------------------------------------------------------------------------------------------------
+shapes Bkg_2016_bb         bb                  ./../workspace/medium/data_2016_bb.root Zprime_2016:Bkg_2016_bb
+shapes ZpBB_2016_bb_M3900  bb                  ./../workspace/medium/MC_bstar_2016_bb.root bstar_2016:ZpBB_2016_bb_M3900
+shapes data_obs            bb                  ./../workspace/medium/data_2016_bb.root Zprime_2016:data_obs
+shapes Bkg_2016_bq         bq                  ./../workspace/medium/data_2016_bq.root Zprime_2016:Bkg_2016_bq
+shapes ZpBB_2016_bq_M3900  bq                  ./../workspace/medium/MC_bstar_2016_bq.root bstar_2016:ZpBB_2016_bq_M3900
+shapes data_obs            bq                  ./../workspace/medium/data_2016_bq.root Zprime_2016:data_obs
+----------------------------------------------------------------------------------------------------------------------------------
+bin          bb             bq           
+observation  -1             -1           
+----------------------------------------------------------------------------------------------------------------------------------
+bin                                   bb                  bb                  bq                  bq                
+process                               ZpBB_2016_bb_M3900  Bkg_2016_bb         ZpBB_2016_bq_M3900  Bkg_2016_bq       
+process                               -1                  1                   0                   2                 
+rate                                  1                   1                   1                   1                 
+----------------------------------------------------------------------------------------------------------------------------------
+btag_2016_bb_M3900      lnN           1.15040316457       -                   -                   -                 
+btag_2016_bq_M3900      lnN           -                   -                   1.03883498541       -                 
+lumi                    lnN           1.026               -                   1.026               -                 
+CMS2016sig_bq_p2_jer  param  0.0 1.0
+CMS2016sig_bb_p2_jer  param  0.0 1.0
+CMS2016sig_bq_p1_jes  param  0.0 1.0
+CMS2016sig_bb_p1_jes  param  0.0 1.0

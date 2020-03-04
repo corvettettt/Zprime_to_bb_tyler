@@ -1,0 +1,20 @@
+imax 1
+jmax 1
+kmax *
+-----------------------------------------------------------------------------------
+shapes         ZpBB_2016_mumu_M4800  *    ./workspace/medium/MC_signal_2016_mumu.root     Zprime_2016:ZpBB_2016_mumu_M4800
+shapes         Bkg_2016_mumu  *    ./workspace/medium/data_2016_mumu.root    Zprime_2016:Bkg_2016_mumu
+shapes         data_obs  *    ./workspace/medium/data_2016_mumu.root    Zprime_2016:data_obs
+-----------------------------------------------------------------------------------
+bin                              mumu
+observation                      -1
+-----------------------------------------------------------------------------------
+bin                              mumu                     mumu                     
+process                          ZpBB_2016_mumu_M4800     Bkg_2016_mumu            
+process                          0                        1                        
+rate                             1                        1                        
+-----------------------------------------------------------------------------------
+lumi                     lnN     1.026                    -                        
+btag_2016_mumu_M4800     lnN     0.879832936869           -                        
+CMS2016sig_mumu_p1_jes   param   0.0                      1.0                      
+CMS2016sig_mumu_p2_jer   param   0.0                      1.0                      

@@ -1,0 +1,20 @@
+imax 1
+jmax 1
+kmax *
+-----------------------------------------------------------------------------------
+shapes         ZpBB_2017_mumu_M3500  *    ./../workspace/medium/MC_bstar_2017_mumu.root     bstar_2017:ZpBB_2017_mumu_M3500
+shapes         Bkg_2017_mumu  *    ./../workspace/medium/data_2017_mumu.root    Zprime_2017:Bkg_2017_mumu
+shapes         data_obs  *    ./../workspace/medium/data_2017_mumu.root    Zprime_2017:data_obs
+-----------------------------------------------------------------------------------
+bin                              mumu
+observation                      -1
+-----------------------------------------------------------------------------------
+bin                              mumu                     mumu                     
+process                          ZpBB_2017_mumu_M3500     Bkg_2017_mumu            
+process                          0                        1                        
+rate                             1                        1                        
+-----------------------------------------------------------------------------------
+lumi                     lnN     1.026                    -                        
+btag_2017_mumu_M3500     lnN     1.01875843436            -                        
+CMS2017sig_mumu_p1_jes   param   0.0                      1.0                      
+CMS2017sig_mumu_p2_jer   param   0.0                      1.0                      

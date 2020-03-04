@@ -1,0 +1,2 @@
+SysError in <TFile::TFile>: could not delete higgsCombineTest.AsymptoticLimits.mH1600.root (errno: 2) (No such file or directory)
+Error in <TFile::WriteTObject>: Directory higgsCombineTest.AsymptoticLimits.mH1600.root is not writable

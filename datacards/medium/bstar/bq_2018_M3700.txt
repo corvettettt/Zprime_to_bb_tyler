@@ -1,0 +1,20 @@
+imax 1
+jmax 1
+kmax *
+-----------------------------------------------------------------------------------
+shapes         ZpBB_2018_bq_M3700  *    ./../workspace/medium/MC_bstar_2018_bq.root     bstar_2018:ZpBB_2018_bq_M3700
+shapes         Bkg_2018_bq  *    ./../workspace/medium/data_2018_bq.root    Zprime_2018:Bkg_2018_bq
+shapes         data_obs  *    ./../workspace/medium/data_2018_bq.root    Zprime_2018:data_obs
+-----------------------------------------------------------------------------------
+bin                              bq
+observation                      -1
+-----------------------------------------------------------------------------------
+bin                              bq                       bq                       
+process                          ZpBB_2018_bq_M3700       Bkg_2018_bq              
+process                          0                        1                        
+rate                             1                        1                        
+-----------------------------------------------------------------------------------
+lumi                     lnN     1.026                    -                        
+btag_2018_bq_M3700       lnN     1.14071979975            -                        
+CMS2018sig_bq_p1_jes     param   0.0                      1.0                      
+CMS2018sig_bq_p2_jer     param   0.0                      1.0                      

@@ -20,7 +20,7 @@ from ROOT import RooFormulaVar, RooGenericPdf, RooGaussian, RooExponential, RooP
 
 #from alpha import drawPlot
 from rooUtils import *
-from samples import sample
+from samples_bstar import sample
 from aliases import alias, aliasSM, working_points, dijet_bins
 from aliases import additional_selections as SELECTIONS
 from utils import extend_binning
@@ -74,7 +74,7 @@ YEAR        = options.year
 VERBOSE     = options.verbose
 READTREE    = True
 ADDSELECTION= options.selection!=""
-VARBINS     = True ## FIXME testing dijet bins FIXME (currently turned on)
+VARBINS     = True
 
 X_MIN = 1530.
 X_MAX = 9067.
@@ -157,6 +157,8 @@ def signal(category):
     jid_2 = RooRealVar(   "jid_2",      "j2 ID",    -1.,   8.)
     jnmuons_1 = RooRealVar(   "jnmuons_1",      "j1 n_{#mu}",    -1.,   8.)
     jnmuons_2 = RooRealVar(   "jnmuons_2",      "j2 n_{#mu}",    -1.,   8.)
+    jmuonpt_1 = RooRealVar(   "jmuonpt_1",      "j1 muon pt",    0.,   13000.)
+    jmuonpt_2 = RooRealVar(   "jmuonpt_2",      "j2 muon pt",    0.,   13000.)
     nmuons = RooRealVar(    "nmuons",       "n_{#mu}",          -1.,   10.     )
     nelectrons = RooRealVar("nelectrons",    "n_{e}",            -1.,   10.     )
     HLT_AK8PFJet500         = RooRealVar("HLT_AK8PFJet500"         , "",  -1., 1.    )
@@ -180,7 +182,7 @@ def signal(category):
     # there is a maximum of 9 variables in the declaration, so the others need to be added with 'add'
     variables = RooArgSet(X_mass)
     variables.add(RooArgSet(j1_pt, jj_deltaEta, jbtag_WP_1, jbtag_WP_2, fatjetmass_1, fatjetmass_2, jnmuons_1, jnmuons_2, weight))
-    variables.add(RooArgSet(nmuons, nelectrons, jid_1, jid_2))
+    variables.add(RooArgSet(nmuons, nelectrons, jid_1, jid_2, jmuonpt_1, jmuonpt_2))
     variables.add(RooArgSet(HLT_AK8PFJet500, HLT_PFJet500, HLT_CaloJet500_NoJetID, HLT_PFHT900, HLT_AK8PFJet550, HLT_PFJet550, HLT_CaloJet550_NoJetID, HLT_PFHT1050))
     variables.add(RooArgSet(HLT_DoublePFJets100_CaloBTagDeepCSV_p71, HLT_DoublePFJets116MaxDeta1p6_DoubleCaloBTagDeepCSV_p71, HLT_DoublePFJets128MaxDeta1p6_DoubleCaloBTagDeepCSV_p71, HLT_DoublePFJets200_CaloBTagDeepCSV_p71, HLT_DoublePFJets350_CaloBTagDeepCSV_p71, HLT_DoublePFJets40_CaloBTagDeepCSV_p71))
     X_mass.setRange("X_reasonable_range", X_mass.getMin(), X_mass.getMax())
@@ -264,7 +266,7 @@ def signal(category):
 
         signalMass = "%s_M%d" % (stype, m)
         signalName = "ZpBB_{}_{}_M{}".format(YEAR, category, m)
-        sampleName = "ZpBB_M{}".format(m)
+        sampleName = "bstar_M{}".format(m)
  
         signalColor = sample[sampleName]['linecolor'] if signalName in sample else 1
 
@@ -385,6 +387,7 @@ def signal(category):
             if boundaryFactor < 0. or boundaryFactor != boundaryFactor: boundaryFactor = 0
             if VERBOSE: print " - Fit normalization vs integral:", signalYield[m].getVal(), "/", boundaryFactor, "events"
             signalNorm[m].setVal( boundaryFactor * signalYield[m].getVal() / signalXS[m].getVal()) # here normalize to sigma(X) x Br = 1 [fb]
+pe1//
             
         vmean[m].setConstant(True)
         vsigma[m].setConstant(True)
@@ -419,6 +422,7 @@ def signal(category):
 
 
     # ====== CONTROL PLOT ======
+    color_scheme = [636, 635, 634, 633, 632, 633, 636, 635, 634, 633, 632, 633, 636, 635, 634, 633, 632, 633, 636, 635, 634, 633, 632, 633, 636, 635, 634, 633, 632, 633, 636, 635, 634, 633, 632, 633, 636, 635, 634, 633, 632, 633]
     c_signal = TCanvas("c_signal", "c_signal", 800, 600)
     c_signal.cd()
     frame_signal = X_mass.frame()
@@ -427,11 +431,12 @@ def signal(category):
             #print "color:",(j%9)+1
             #print "signalNorm[m].getVal() =", signalNorm[m].getVal()
             #print "RooAbsReal.NumEvent =", RooAbsReal.NumEvent
-            signal[m].plotOn(frame_signal, RooFit.LineColor((j%9)+1), RooFit.Normalization(signalNorm[m].getVal(), RooAbsReal.NumEvent), RooFit.Range("X_reasonable_range"))
+            signal[m].plotOn(frame_signal, RooFit.LineColor(color_scheme[j]), RooFit.Normalization(signalNorm[m].getVal(), RooAbsReal.NumEvent), RooFit.Range("X_reasonable_range"))
     frame_signal.GetXaxis().SetRangeUser(0, 10000)
     frame_signal.Draw()
     #drawCMS(-1, "Simulation Preliminary", year=YEAR)
-    drawCMS(-1, "Work in Progress", year=YEAR, suppressCMS=True)
+    #drawCMS(-1, "Work in Progress", year=YEAR, suppressCMS=True)
+    drawCMS(-1, "", year=YEAR, suppressCMS=True)
     drawAnalysis(category)
     drawRegion(category)
 
@@ -582,7 +587,7 @@ def signal(category):
             #jslope1 = gslope1.Eval(m)
             #jalpha2 = galpha2.Eval(m)
             #jslope2 = gslope2.Eval(m)
-            jmean = gmean.Eval(m, 0, "S")   ## checking if a spline yields nicer fits FIXME
+            jmean = gmean.Eval(m, 0, "S") 
             jsigma = gsigma.Eval(m, 0, "S")
             jalpha1 = galpha1.Eval(m, 0, "S")
             jslope1 = gslope1.Eval(m, 0, "S")
@@ -629,8 +634,10 @@ def signal(category):
 
         #signalNorm[m].setConstant(False)  ## newly put here to ensure it's freely floating in the combine fit
  
-    c1 = TCanvas("c1", "Crystal Ball", 1200, 1200) #if not isAH else 1200
-    c1.Divide(2, 3)
+    #c1 = TCanvas("c1", "Crystal Ball", 1200, 1200) #if not isAH else 1200
+    #c1.Divide(2, 3)
+    c1 = TCanvas("c1", "Crystal Ball", 1800, 800)
+    c1.Divide(3, 2)
     c1.cd(1)
     gmean.SetMinimum(0.)
     gmean.Draw("APL")
@@ -677,7 +684,8 @@ def signal(category):
     gnorm.GetXaxis().SetRangeUser(genPoints[0]-100, genPoints[-1]+100)
     gnorm.GetYaxis().SetRangeUser(0., gnorm.GetMaximum()*1.25)
     #drawCMS(-1, "Simulation Preliminary", year=YEAR)
-    drawCMS(-1, "Work in Progress", year=YEAR, suppressCMS=True) 
+    #drawCMS(-1, "Work in Progress", year=YEAR, suppressCMS=True) 
+    drawCMS(-1, "", year=YEAR, suppressCMS=True) 
     drawAnalysis(category)
     drawRegion(category)
     c2.Print(PLOTDIR+"MC_signal_"+YEAR+"/"+stype+"_"+category+"_SignalNorm.pdf")
@@ -783,7 +791,8 @@ def drawPlot(name, channel, variable, model, dataset, fitRes=[], norm=-1, reg=No
     frame.GetYaxis().SetTitleOffset(1.4)
     frame.Draw()
     #drawCMS(LUMI, cmsLabel)
-    drawCMS(LUMI, "Work in Progress", suppressCMS=True)
+    #drawCMS(LUMI, "Work in Progress", suppressCMS=True)
+    drawCMS(LUMI, "", suppressCMS=True)
     drawAnalysis(channel)
     drawRegion(channel + ("" if isData and not isCategory else ('SR' if 'SR' in name else ('SB' if 'SB' in name else ""))), True)
     if isSignal: drawMass("M_{Z'} = "+mass+" GeV")

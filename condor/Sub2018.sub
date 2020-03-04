@@ -1,0 +1,8 @@
+arguments             = $(ProcId)
+executable            = condor/submit_bstar_template2018.sh
+output                = condor/output/2018_medium.$(ClusterId).$(ProcId).out
+error                 = condor/error/2018_medium.$(ClusterId).$(ProcId).err
+log                   = condor/log/2018_medium.$(ClusterId).log
++JobFlavour           = "espresso"
+transfer_output_files = ""
+queue 65 

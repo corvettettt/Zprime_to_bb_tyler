@@ -1,0 +1,20 @@
+imax 1
+jmax 1
+kmax *
+-----------------------------------------------------------------------------------
+shapes         ZpBB_2016_bq_M6900  *    ./workspace/medium/MC_signal_2016_bq.root     Zprime_2016:ZpBB_2016_bq_M6900
+shapes         Bkg_2016_bq  *    ./workspace/medium/data_2016_bq.root    Zprime_2016:Bkg_2016_bq
+shapes         data_obs  *    ./workspace/medium/data_2016_bq.root    Zprime_2016:data_obs
+-----------------------------------------------------------------------------------
+bin                              bq
+observation                      -1
+-----------------------------------------------------------------------------------
+bin                              bq                       bq                       
+process                          ZpBB_2016_bq_M6900       Bkg_2016_bq              
+process                          0                        1                        
+rate                             1                        1                        
+-----------------------------------------------------------------------------------
+lumi                     lnN     1.026                    -                        
+btag_2016_bq_M6900       lnN     0.99628812864            -                        
+CMS2016sig_bq_p1_jes     param   0.0                      1.0                      
+CMS2016sig_bq_p2_jer     param   0.0                      1.0                      

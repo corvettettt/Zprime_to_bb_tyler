@@ -1,0 +1,27 @@
+Combination of bb=bb_2018_M2600_MC.txt  bq=bq_2018_M2600_MC.txt
+imax 2 number of bins
+jmax 3 number of processes minus 1
+kmax 7 number of nuisance parameters
+----------------------------------------------------------------------------------------------------------------------------------
+shapes Bkg_2018_bb         bb                  ./../workspace/medium/MC_QCD_TTbar_2018_bb.root Zprime_2018:Bkg_2018_bb
+shapes ZpBB_2018_bb_M2600  bb                  ./../workspace/medium/MC_bstar_2018_bb.root bstar_2018:ZpBB_2018_bb_M2600
+shapes data_obs            bb                  ./../workspace/medium/MC_QCD_TTbar_2018_bb.root Zprime_2018:data_obs
+shapes Bkg_2018_bq         bq                  ./../workspace/medium/MC_QCD_TTbar_2018_bq.root Zprime_2018:Bkg_2018_bq
+shapes ZpBB_2018_bq_M2600  bq                  ./../workspace/medium/MC_bstar_2018_bq.root bstar_2018:ZpBB_2018_bq_M2600
+shapes data_obs            bq                  ./../workspace/medium/MC_QCD_TTbar_2018_bq.root Zprime_2018:data_obs
+----------------------------------------------------------------------------------------------------------------------------------
+bin          bb             bq           
+observation  -1             -1           
+----------------------------------------------------------------------------------------------------------------------------------
+bin                                   bb                  bb                  bq                  bq                
+process                               ZpBB_2018_bb_M2600  Bkg_2018_bb         ZpBB_2018_bq_M2600  Bkg_2018_bq       
+process                               -1                  1                   0                   2                 
+rate                                  1                   1                   1                   1                 
+----------------------------------------------------------------------------------------------------------------------------------
+btag_2018_bb_M2600      lnN           1.28926981137       -                   -                   -                 
+btag_2018_bq_M2600      lnN           -                   -                   1.12836205841       -                 
+lumi                    lnN           1.026               -                   1.026               -                 
+CMS2018sig_bq_p1_jes  param  0.0 1.0
+CMS2018sig_bb_p2_jer  param  0.0 1.0
+CMS2018sig_bb_p1_jes  param  0.0 1.0
+CMS2018sig_bq_p2_jer  param  0.0 1.0
